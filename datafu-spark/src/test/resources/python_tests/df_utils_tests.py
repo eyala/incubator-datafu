@@ -45,7 +45,7 @@ func_dedup_res = df_utils.dedup(dataFrame=df_people, groupCol=df_people.id,
                              orderCols=[df_people.age.desc(), df_people.name.desc()])
 func_dedup_res.registerTempTable("dedup")
 
-func_dedupTopN_res = df_utils.dedupTopN(dataFrame=df_people, n=2, groupCol=df_people.id,
+func_dedupTopN_res = df_utils.dedupTopN(dataFrame=df_people, n=2, desc=true, groupCol=df_people.id,
                                      orderCols=[df_people.age.desc(), df_people.name.desc()])
 func_dedupTopN_res.registerTempTable("dedupTopN")
 

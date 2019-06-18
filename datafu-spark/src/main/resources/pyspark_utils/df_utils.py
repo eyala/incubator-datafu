@@ -52,17 +52,18 @@ class PySparkDFUtils(object):
         jdf = self._get_utils(dataFrame).dedup(dataFrame._jdf, groupCol._jc, java_cols)
         return DataFrame(jdf, self._sqlContext)
 
-    def dedupTopN(self, dataFrame, n, groupCol, orderCols = []):
+    def dedupTopN(self, dataFrame, n, desc, groupCol, orderCols = []):
         """
         Used get the top N records (after ordering according to the provided order columns) in each group.
         :param dataFrame: DataFrame to operate on
         :param n: number of records to return from each group
+        :param desc: whether to use a descending order
         :param groupCol: column to group by the records
         :param orderCols: columns to order the records according to
         :return: DataFrame representing the data after the operation
         """
         java_cols = self._cols_to_java_cols(orderCols)
-        jdf = self._get_utils(dataFrame).dedupTopN(dataFrame._jdf, n, groupCol._jc, java_cols)
+        jdf = self._get_utils(dataFrame).dedupTopN(dataFrame._jdf, n, desc, groupCol._jc, java_cols)
         return DataFrame(jdf, self._sqlContext)
 
     def dedup2(self, dataFrame, groupCol, orderByCol, desc = True, columnsFilter = [], columnsFilterKeep = True):

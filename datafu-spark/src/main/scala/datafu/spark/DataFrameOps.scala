@@ -37,8 +37,8 @@ object DataFrameOps {
     def dedup(groupCol: Column, orderCols: Column*): DataFrame =
       SparkDFUtils.dedup(df, groupCol, orderCols: _*)
 
-    def dedupTopN(n: Int, groupCol: Column, orderCols: Column*): DataFrame =
-      SparkDFUtils.dedupTopN(df, n, groupCol, orderCols: _*)
+    def dedupTopN(n: Int, desc: Boolean, groupCol: Column, orderCols: Column*): DataFrame =
+      SparkDFUtils.dedupTopN(df, n, desc, groupCol, orderCols: _*)
 
     def dedup2(groupCol: Column,
                orderByCol: Column,

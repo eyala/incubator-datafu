@@ -63,7 +63,7 @@ class DataFrameOpsTests extends FunSuite with DataFrameSuiteBase {
 
     assertDataFrameEquals(expected,
                           inputDataFrame
-                            .dedup($"col_grp", $"col_ord".desc)
+                            .dedup($"col_grp", $"col_ord")
                             .select($"col_grp", $"col_ord"))
   }
 
@@ -158,7 +158,7 @@ class DataFrameOpsTests extends FunSuite with DataFrameSuiteBase {
 
   test("test_dedup_top_n") {
     val actual = inputDataFrame
-      .dedupTopN(2, $"col_grp", $"col_ord".desc)
+      .dedupTopN(2, desc = true, $"col_grp", $"col_ord")
       .select($"col_grp", $"col_ord")
 
     val expected = sqlContext.createDataFrame(

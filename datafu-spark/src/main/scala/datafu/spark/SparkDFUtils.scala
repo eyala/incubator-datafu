@@ -40,11 +40,13 @@ class SparkDFUtilsBridge {
 
   def dedupTopN(df: DataFrame,
                 n: Int,
+                desc: Boolean,
                 groupCol: Column,
                 orderCols: JavaList[Column]): DataFrame = {
     val converted = convertJavaListToSeq(orderCols)
     SparkDFUtils.dedupTopN(df = df,
                            n = n,
+                           desc = desc,
                            groupCol = groupCol,
                            orderCols = converted: _*)
   }
@@ -148,7 +150,7 @@ object SparkDFUtils {
     */
   def dedup(df: DataFrame, groupCol: Column, orderCols: Column*): DataFrame = {
     df.dropDuplicates()
-    dedupTopN(df, 1, groupCol, orderCols: _*)
+    dedupTopN(df, 1, desc = true, groupCol, orderCols: _*)
   }
 
   /**
@@ -157,16 +159,29 @@ object SparkDFUtils {
     *
     * @param df DataFrame to operate on
     * @param n number of records to return from each group
+    * @param desc whether to use descending order
     * @param groupCol column to group by the records
     * @param orderCols columns to order the records according to
     * @return DataFrame representing the data after the operation
     */
   def dedupTopN(df: DataFrame,
                 n: Int,
+                desc: Boolean,
                 groupCol: Column,
                 orderCols: Column*): DataFrame = {
-    val w = Window.partitionBy(groupCol).orderBy(orderCols: _*)
-    df.withColumn("rn", row_number.over(w)).where(col("rn") <= n).drop("rn")
+    val w = Window.partitionBy(groupCol)
+    
+    val window = if (desc) {
+      if (orderCols.size == 1) {
+        w.orderBy(orderCols.head.desc)
+      } else {
+        w.orderBy(struct(orderCols: _*).desc)
+      }
+    } else {
+      w.orderBy(orderCols: _*)
+    }
+      
+    df.withColumn("rn", row_number.over(window)).where(col("rn") <= n).drop("rn")
   }
 
   /**
