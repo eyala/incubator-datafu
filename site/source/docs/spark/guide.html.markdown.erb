@@ -138,3 +138,64 @@ The result will look like this, just as if we had used a regular join.
 +-------+-----------+--------------+
 </pre>
 
+## Doing a join between a number and a range
+
+An interesting type of join that DataFu allows you to do is between a number and a range. A naive solution for this might explode the range columns, but this would cause the table to become huge.
+The DataFu _joinWithRange_ method takes a decrease factor in order to deal with this problem.
+
+For an example, let's imagine two data frames, one of graded papers and one representing a system for scoring.
+
+The dataframe for grades might look like this:
+
+<pre>
++-----+-------+
+|grade|student|
++-----+-------+
+|   37| tyrion|
+|   72|   robb|
+|   83| renley|
+|   64|    ned|
+|   95|  sansa|
+|   88|   arya|
+|   79| cersei|
+|   81|  jaime|
++-----+-------+
+</pre>
+
+The scoring system might look like this:
+
+<pre>
++-----+---+---+
+|grade|min|max|
++-----+---+---+
+|    A| 90|100|
+|    B| 80| 90|
+|    C| 70| 80|
+|    D| 60| 70|
+|    F|  0| 60|
++-----+---+---+
+</pre>
+
+We will use a decrease factor of 10, since each range is of size at least 10.
+
+```scala
+skewed.joinWithRange("grade", notskewed, "min", "max", 2).show
+```
+
+Our result will be as follows:
+
+<pre>
++-----+-------+-----+---+---+
+|grade|student|grade|min|max|
++-----+-------+-----+---+---+
+|   37| tyrion|    F|  0| 60|
+|   72|   robb|    C| 70| 80|
+|   83| renley|    B| 80| 90|
+|   64|    ned|    D| 60| 70|
+|   95|  sansa|    A| 90|100|
+|   88|   arya|    B| 80| 90|
+|   79| cersei|    C| 70| 80|
+|   81|  jaime|    B| 80| 90|
++-----+-------+-----+---+---+
+</pre>
+
