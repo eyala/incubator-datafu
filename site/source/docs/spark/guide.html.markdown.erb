@@ -140,7 +140,7 @@ The result will look like this, just as if we had used a regular join.
 
 ## Doing a join between a number and a range
 
-An interesting type of join that DataFu allows you to do is between a number and a range. A naive solution for this might explode the range columns, but this would cause the table to become huge.
+An interesting type of join that DataFu allows you to do is between a point and a range. A naive solution for this might explode the range columns, but this would cause the table to become huge.
 The DataFu _joinWithRange_ method takes a decrease factor in order to deal with this problem.
 
 For an example, let's imagine two data frames, one of graded papers and one representing a system for scoring.
@@ -198,4 +198,14 @@ Our result will be as follows:
 |   81|  jaime|    B| 80| 90|
 +-----+-------+-----+---+---+
 </pre>
+
+In order to use _joinWithRange_ on tables, they need to meet two requirements:
+
+1. the points table (_grades_ in our example) needs to be distinct on the point column
+2. the range and point columns need to be numeric
+
+If there are ranges that overlap, a point that matches will be joined to all the ranges that include it. In order to take only one range per point, you can use the joinWithRangeAndDedup_ method.
+
+It takes the same parameters as _joinWithRange_, with one addition - whether to match the largest or smallest range that contains a point.
+
 
