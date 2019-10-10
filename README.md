@@ -97,7 +97,7 @@ To run all the tests:
 
     ./gradlew test
 
-To run only one modules's tests - for example, only the DataFu Pig tests:
+To run only one module's tests - for example, only the DataFu Pig tests:
 
     ./gradlew :datafu-pig:test
 

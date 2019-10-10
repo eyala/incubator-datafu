@@ -40,6 +40,8 @@ ready to get started using DataFu Spark, keep reading.
 
 The rest of this page assumes you already have a built JAR available.  If this is not the case, please see the [Download](/docs/download.html) page.
 
+This jar should be loaded to the Spark class path. You can verify that you've done this correctly by trying to import one of our DataFu classes, for example, _DataFrameOps_.
+
 ## Basic Example: Finding the most recent update of a given record
 
 A common scenario in data sent to the HDFS — the Hadoop Distributed File System — is multiple rows representing updates for the same logical data. For example, in a table representing accounts, a record might be written every time customer data is updated, with each update receiving a newer timestamp. Let’s consider the following simplified example.
